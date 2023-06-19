@@ -39,3 +39,12 @@ func TestPromise_CatchPanic(t *testing.T) {
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "panic: oops")
 }
+
+func TestInstant(t *testing.T) {
+	t.Parallel()
+
+	p := Instant(1000, nil)
+	v, err := p.Resolve()
+	require.Equal(t, 1000, v)
+	require.NoError(t, err)
+}

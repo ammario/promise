@@ -18,6 +18,18 @@ func (p *Promise[T]) Resolve() (T, error) {
 	return p.v, p.err
 }
 
+// Instant returns a promise that is already resolved. It is useful in testing
+// or when creating an optionally lazy API.
+func Instant[T any](v T, err error) *Promise[T] {
+	ch := make(chan struct{})
+	close(ch)
+	return &Promise[T]{
+		doneCh: ch,
+		v:      v,
+		err:    err,
+	}
+}
+
 // Go calls fn in a goroutine and promises that the value will be available
 // in the future via Resolve.
 func Go[T any](fn func() (T, error)) *Promise[T] {
