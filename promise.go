@@ -2,6 +2,8 @@
 // to increase concurrency by making it easy to model lazy computations.
 package promise
 
+import "fmt"
+
 // Promise represents a value that will be computed in the future.
 type Promise[T any] struct {
 	doneCh chan struct{}
@@ -23,8 +25,13 @@ func Go[T any](fn func() (T, error)) *Promise[T] {
 		doneCh: make(chan struct{}),
 	}
 	go func() {
+		defer close(p.doneCh)
+		defer func() {
+			if r := recover(); r != nil {
+				p.err = fmt.Errorf("panic: %v", r)
+			}
+		}()
 		p.v, p.err = fn()
-		close(p.doneCh)
 	}()
 	return p
 }

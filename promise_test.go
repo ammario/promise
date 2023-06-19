@@ -26,3 +26,16 @@ func TestPromise(t *testing.T) {
 	// Should launch instantaneously
 	require.WithinDuration(t, afterResolve, beforeGo.Add(time.Second), time.Millisecond*10)
 }
+
+func TestPromise_CatchPanic(t *testing.T) {
+	t.Parallel()
+
+	p := Go(func() (int, error) {
+		panic("oops")
+	})
+
+	v, err := p.Resolve()
+	require.Equal(t, 0, v)
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "panic: oops")
+}
