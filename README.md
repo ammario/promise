@@ -10,14 +10,14 @@ implementation.
 ## Usage
 
 ```go
-	p := promise.Go(func() (int, error) {
-		time.Sleep(time.Second)
-		return 1000, nil
-	})
-	
-    // Do some other work...
+p := promise.Go(func() (int, error) {
+    time.Sleep(time.Second)
+    return 1000, nil
+})
 
-    i, err := p.Resolve()
-    // i == 1000
-    // err == nil
+// Do some other work...
+
+i, err := p.Resolve()
+// i == 1000
+// err == nil
 ```
