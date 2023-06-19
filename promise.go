@@ -1,5 +1,5 @@
-// Package promise implements a basic promise construct. Its primary goal is
-// to increase concurrency by making it easier to model lazy computations.
+// Package promise implements a basic promise construct. Its goal is
+// to increase concurrency by making it easy to model lazy computations.
 package promise
 
 // Promise represents a value that will be computed in the future.
@@ -16,7 +16,8 @@ func (p *Promise[T]) Resolve() (T, error) {
 	return p.v, p.err
 }
 
-// Go creates a new promise that will be resolved by the given function.
+// Go calls fn in a goroutine and promises that the value will be available
+// in the future via Resolve.
 func Go[T any](fn func() (T, error)) *Promise[T] {
 	p := &Promise[T]{
 		doneCh: make(chan struct{}),
