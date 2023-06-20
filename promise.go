@@ -12,7 +12,8 @@ type Promise[T any] struct {
 }
 
 // Resolve blocks until the promise is resolved, then returns the value and
-// error.
+// error. If called multiple times, it will return the first value and error
+// without recomputing.
 func (p *Promise[T]) Resolve() (T, error) {
 	<-p.doneCh
 	return p.v, p.err
